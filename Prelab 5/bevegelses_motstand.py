@@ -12,7 +12,7 @@ def terminal_rayleigh(d):
     return d ** (1/2)
 
 
-def terminal_stokes(rho_k, rho_m, nu, d):
+def terminal_stokes(rho_k, rho_m, mu, d):
     """
     (Laminært fall)
     Funksjonen regner ut terminalhastigheten til objektet ved Stokes strømning.
@@ -20,10 +20,10 @@ def terminal_stokes(rho_k, rho_m, nu, d):
     g = 9.81
     gamma = 1/18
     C_s = 6 * np.pi     # stokes-koeffisienten av en kule
+    nu_s = mu / rho_k   # dynamisk viskositet over tetthet til mediet
 
-    # feil nu?
     g_hat = ((rho_k / rho_m) - 1) * gamma * g
-    return C_s, (g_hat / nu) * (d ** 2)
+    return C_s, (g_hat / nu_s) * (d ** 2)
 
 
 def terminal_plot(arr_data, arr_label):
@@ -68,14 +68,11 @@ mu_olje = 0.190
 data = np.loadtxt("terminal_hastighet_rdata.dat")
 navn = [0, "Rayleigh", "Annen", "Stoke"]
 
-diameter = np.linspace(0.005, 0.1, 10000)
-print(diameter)
-c_s, veloc = terminal_stokes(rho_kuler[2], rho_medium[1], nu_medium[1], diameter)
+diameter = np.linspace(0.005, 0.1, 10000)       # [m]
+c_s, stal_vel_s = terminal_stokes(rho_kuler[2], rho_medium[1], mu_medium[1], diameter)
 # veloc_r = terminal_rayleigh(diameter)
-print(veloc[0])
 
-plt.plot(diameter, veloc * 100)
-plt.plot(diameter[0], veloc[0], 'ro')
+plt.plot(diameter, stal_vel_s)
 # plt.plot(diameter, veloc)
 plt.xscale('log'), plt.yscale('log')
 plt.xlabel('Diameter [mm]'), plt.ylabel('Terminal hastighet $v_T (d)$ [mm/s]')
@@ -84,5 +81,5 @@ plt.grid(which='both')
 plt.show()
 
 # linear_regression(data[0], data[1], "Stokes'")
-# terminal_video(6.5, 30)
+# terminal_video(6.5, 30)       # (frames, fps)
 # terminal_plot(data, navn)
