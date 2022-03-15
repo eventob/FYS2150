@@ -2,7 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
 
+data = np.genfromtxt("faraday.csv", delimiter=',')
+data = data[1:]
+mag_flux = data[:, 0]
+angle = data[:, 1]
 
+
+# Funksjoner for lab-utregninger
 def susceptibility(f_z, cross_sec, b_1, b_2):
     """
     Funksjon for å beregne susceptibiliteten for vismut materialet.
@@ -46,3 +52,18 @@ def endring_magnetiskflukstetthet(s_1, s_2, i_1, i_2, cross_sec, viklinger):
     B_I = delta_B_I / 2
     I = (i_1 + i_2) / 2     # strøm fra hver av ytterpunktene
     return B_I, I
+
+
+def verdet_konstant(b_arr, angle_arr, length, d_length):
+    line = linregress(b_arr, angle_arr)
+    d_v = line.slope
+    v = d_v / length
+    print(v, d_v)
+
+
+verdet_konstant(mag_flux, angle, 0.03, 0.001)
+
+"""
+NOTES: Det er to spørsmål på prelabben som er feil og bør settes inn i dette programmet
+før labben i morgen 16.03!
+"""
