@@ -66,6 +66,14 @@ def linear_graph(x_arr, slope, const):
     return slope * x_arr + const
 
 
+def stokes_coefficient(mu_medium, rho_medium, rho_kule, b_s, g=9.81):
+    nu_s = mu_medium / rho_medium  # dynamsiske viskositet over tetthet til mediet
+    g_hat = nu_s * np.exp(b_s)
+    gamma = g_hat / (((rho_kule / rho_medium) - 1) * g)
+
+    return np.pi / (3 * gamma)
+
+
 def plot_sammenligning(x_arr, y_arr, where):
     plt.plot(x_arr * 1e3, y_arr, 'o', label=where)
     plt.title('Terminalhastighet isopor- og stålkuler')
@@ -146,7 +154,7 @@ y_liten = (stig_liten * (d_liten[0:2] * 1e3)) + konst_liten
 y_stor = (stig_stor * (d_array * 1e3)) + np.log10(konst_stor)
 y_iso = (stig_iso * (d_array * 1e3)) + np.log10(konst_iso)
 y2 = (d_array * 1e3) ** 2
-y15 = (d_array * 1e3) ** 0.5
+y15 = (d_array * 1e3) ** 0.5 * 1e2
 
 plt.plot(d_liten[0:2] * 1e3, y_liten, label='Lin.reg. små kuler')
 plt.plot(d_array * 1e3, y_stor, label='Lin.reg. store kuler')
@@ -162,13 +170,4 @@ plt.plot(d_array * 1e3, y15, label='Rayleigh')
 plot_sammenligning(d_iso, v_iso, 'Isopor i luft'), plot_sammenligning(d_stor, v_78, 'S: 7 - 8')
 plot_sammenligning(d_liten, v_200, 'L: 200 - 150')
 plt.show()
-
-"""
-Ting til ettertid:
-    - Finn b_S for begge av disse lineærtilpasningene
-"""
-
-
-
-
 
