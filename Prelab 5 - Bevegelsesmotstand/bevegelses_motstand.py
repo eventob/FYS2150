@@ -138,74 +138,34 @@ print(v_iso)    # Terminal hastigheter fra målinger vi bruker videre (Hvorfor a
 
 
 # Lineær regresjoner av dataene fra stål i olje og isopor i luft (begge akser gitt i mm)
-stig_liten, err_liten, konst_liten = linear_regression(d_liten[2:] * 1e3, v_200[2:], "stål i liten olje")
+stig_liten, err_liten, konst_liten = linear_regression(d_liten[0:2] * 1e3, v_200[0:2], "stål i liten olje")
 stig_stor, err_stor, konst_stor = linear_regression(d_stor * 1e3, v_78, 'Regresjon av stål i stor olje')
 stig_iso, err_iso, konst_iso = linear_regression(d_iso * 1e3, v_iso, "isopor i luft")
-# s2, s2_err, s2_konst = linear_regression(d[2:], v_78[2:], 'Siste 4')      # linje for de siste fire verdiene i stor tank olje
-# s3, s3_err, s3_konst = linear_regression(d2[:2], v_200[:2], 'Første 3')   # linje for de første tre verdiene i liten tank olje
 
-y_liten = (stig_liten * (d_array * 1e3)) + konst_liten
-y_stor = (stig_stor * (d_stor * 1e3)) + konst_stor
-y_iso = (stig_iso * (d_iso * 1e3)) + konst_iso
+y_liten = (stig_liten * (d_liten[0:2] * 1e3)) + konst_liten
+y_stor = (stig_stor * (d_array * 1e3)) + np.log10(konst_stor)
+y_iso = (stig_iso * (d_array * 1e3)) + np.log10(konst_iso)
+y2 = (d_array * 1e3) ** 2
+y15 = (d_array * 1e3) ** 0.5
 
-plt.plot(d_array * 1e3, y_liten, label='Lin.reg. små kuler')
-plt.plot(d_stor * 1e3, y_stor, label='Lin.reg. store kuler')
-plt.plot(d_iso * 1e3, y_iso, label='Lin.reg. isopor')
-
-# y2 = (liten_stig * (d_array * 1e3)) + liten_konst
-# y3 = (iso_stig * (d_array * 1e3)) + iso_konst
-# y4 = (d_array * 1e3) ** 2         # sammenligning med Stokes' lov
-# y5 = (d_array * 1e3) ** 0.5       # sammenligning med Rayleigh's lov
-# y5 = (s2 * d_array) + s2_konst
-# y6 = (s3 * d_array) + s3_konst
+plt.plot(d_liten[0:2] * 1e3, y_liten, label='Lin.reg. små kuler')
+plt.plot(d_array * 1e3, y_stor, label='Lin.reg. store kuler')
+plt.plot(d_array * 1e3, y_iso, label='Lin.reg. isopor')
+plt.plot(d_array * 1e3, y2, label='Stokes')
+plt.plot(d_array * 1e3, y15, label='Rayleigh')
 
 
 # Hastighetsplott av alle målinger som ble gjort for alle kuler (for å velge ut beste målinger)
-plot_sammenligning(d_stor, v_67, 'S: 6 - 7'), plot_sammenligning(d_stor, v_78, 'S: 7 - 8')
-plot_sammenligning(d_stor, v_89, 'S: 8 - 9'), plot_sammenligning(d_liten, v_300, 'L: 300 - 250')
-plot_sammenligning(d_liten, v_250, 'L: 250 - 200'), plot_sammenligning(d_liten, v_200, 'L: 200 - 150')
-plot_sammenligning(d_iso, v_iso, 'Isopor i luft')
+# plot_sammenligning(d_stor, v_67, 'S: 6 - 7'), plot_sammenligning(d_stor, v_78, 'S: 7 - 8')
+# plot_sammenligning(d_stor, v_89, 'S: 8 - 9'), plot_sammenligning(d_liten, v_300, 'L: 300 - 250')
+# plot_sammenligning(d_liten, v_250, 'L: 250 - 200'), plot_sammenligning(d_liten, v_200, 'L: 200 - 150')
+plot_sammenligning(d_iso, v_iso, 'Isopor i luft'), plot_sammenligning(d_stor, v_78, 'S: 7 - 8')
+plot_sammenligning(d_liten, v_200, 'L: 200 - 150')
 plt.show()
 
-
 """
-d_reg = np.linspace(0.1, 120, 10000)
-d2_reg = np.linspace(0.1, 120, 10000)
-d_iso_reg = np.linspace(0.1, 120, 10000)
-
-# fast = linregress(x=2)
-# fast_konst = fast.intercept
-
-print(olje_stig)
-
-
-plt.plot(d_reg, y, label='Linreg stor olje')
-
-plt.plot(d_iso, y3, label='Linreg isopor')
-plt.plot(d_reg, y4, label='Fast 2')
-
-plt.plot(d_reg, y5, label='')
-plt.plot(d2_reg, y6)
-# plt.plot(d_reg, y5, label='Fast 0.5')
-
-plt.plot(d_reg, stal_vel_s / 1e3, label="Stokes' stålkule i olje")
-
-plt.plot(d_iso, v_iso, 'o', label='Terminal for isopor')
-
-
-# plt.plot(d2, v_300, 'o-', label='Terminal mellom 300 - 250')
-# plt.plot(d2, v_250, 'o-',  label='Terminal mellom 250 - 200')
-plt.plot(d2, v_200, 'o',  label='Terminal mellom 200 - 150')
-
-
-# terminal_plot(data, navn)
-
-
 Ting til ettertid:
-    - Finn lineærtilpasningen til de tre første punktene for de minste kulene
-    - Finn lineærtilpasningen til de fire siste punktene for de største kulene
     - Finn b_S for begge av disse lineærtilpasningene
-    - Finn 
 """
 
 
