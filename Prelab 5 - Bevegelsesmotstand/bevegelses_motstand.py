@@ -67,11 +67,12 @@ def linear_graph(x_arr, slope, const):
 
 
 def stokes_coefficient(mu_medium, rho_medium, rho_kule, b_s, g=9.81):
+    b_s = np.log(b_s)
     nu_s = mu_medium / rho_medium  # dynamsiske viskositet over tetthet til mediet
     g_hat = nu_s * np.exp(b_s)
     gamma = g_hat / (((rho_kule / rho_medium) - 1) * g)
 
-    return np.pi / (3 * gamma)
+    return np.pi / (3 * gamma) / 1e3
 
 
 def plot_sammenligning(x_arr, y_arr, where):
@@ -111,10 +112,9 @@ print("Analytiske hastigheter for 1. liten oljetank, 2. stor oljetank, 3. isopor
 print(teo_term_liten), print(teo_term_stor / 1000), print(teo_term_iso / 1000)  # mm/s, m/s, m/s
 
 # teoretisk plot av hastigheter for stokes' strømning
-plt.plot(d_array * 1e3, term_staal, color='#9c9c9c', label='Stål i olje (S)')
-plt.plot(d_array * 1e3, term_isopor, color='#4f4f4f', label='Isopor i luft (S)')
+plt.plot(d_array * 1e3, term_staal, '--', color='#9c9c9c', label='Stål i olje (S)')
+plt.plot(d_array * 1e3, term_isopor, '--', color='#4f4f4f', label='Isopor i luft (S)')
 plot_analyse()
-# plt.show()
 
 
 # Data fra labben
@@ -146,6 +146,10 @@ stig_liten, err_liten, konst_liten = linear_regression(d_liten[0:2] * 1e3, v_200
 stig_stor, err_stor, konst_stor = linear_regression(d_stor * 1e3, v_78, 'Regresjon av stål i stor olje')
 stig_iso, err_iso, konst_iso = linear_regression(d_iso * 1e3, v_iso, "isopor i luft")
 
+print(stokes_coefficient(mu_medium[1], rho_medium[1], rho_kuler[2], abs(konst_liten)))
+print(stokes_coefficient(mu_medium[1], rho_medium[1], rho_kuler[2], konst_stor))
+print(stokes_coefficient(mu_medium[1], rho_medium[1], rho_kuler[2], konst_iso))
+
 y_liten = (stig_liten * (d_liten[0:2] * 1e3)) + konst_liten
 y_stor = (stig_stor * (d_array * 1e3)) + np.log10(konst_stor)
 y_iso = (stig_iso * (d_array * 1e3)) + np.log10(konst_iso)
@@ -155,8 +159,8 @@ y15 = (d_array * 1e3) ** 0.5 * 1e2
 plt.plot(d_liten[0:2] * 1e3, y_liten, label='Lin.reg. små kuler')
 plt.plot(d_array * 1e3, y_stor, label='Lin.reg. store kuler')
 plt.plot(d_array * 1e3, y_iso, label='Lin.reg. isopor')
-plt.plot(d_array * 1e3, y2, label='Stokes')
-plt.plot(d_array * 1e3, y15, label='Rayleigh')
+plt.plot(d_array * 1e3, y2, '--', label='Stokes')
+plt.plot(d_array * 1e3, y15, '--', label='Rayleigh')
 
 # Hastighetsplott av alle målinger som ble gjort for alle kuler (for å velge ut beste målinger)
 # plot_sammenligning(d_stor, v_67, 'S: 6 - 7'), plot_sammenligning(d_stor, v_78, 'S: 7 - 8')
@@ -164,9 +168,7 @@ plt.plot(d_array * 1e3, y15, label='Rayleigh')
 # plot_sammenligning(d_liten, v_250, 'L: 250 - 200'), plot_sammenligning(d_liten, v_200, 'L: 200 - 150')
 plot_sammenligning(d_iso, v_iso, 'Isopor i luft'), plot_sammenligning(d_stor, v_78, 'S: 7 - 8')
 plot_sammenligning(d_liten, v_200, 'L: 200 - 150')
+# plt.savefig('innlev.png')
 plt.show()
-
-
-
 
 
