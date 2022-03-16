@@ -10,7 +10,7 @@ def terminal_rayleigh(d):
     Funksjonen regner ut terminalhastigheten til objektet ved Rayleigh strømning.
     """
     # c_r = f_d / (rho * r ** 2 * vel ** 2)
-    return d ** (1/2)
+    return d ** (1 / 2)
 
 
 def terminal_stokes(rho_kule, rho_medium, mu_medium, diameter):
@@ -18,10 +18,10 @@ def terminal_stokes(rho_kule, rho_medium, mu_medium, diameter):
     (Laminært fall)
     Funksjonen regner ut terminalhastigheten til objektet ved Stokes strømning.
     """
-    g = 9.81            # gravitasjonskonstanten
-    gamma = 1/18        # konstant for en kule fra Stokes' lov
-    C_s = 6 * np.pi                                     # stokes-koeffisienten av en kule
-    nu_s = mu_medium / rho_medium                       # dynamsiske viskositet over tetthet til mediet
+    g = 9.81  # gravitasjonskonstanten
+    gamma = 1 / 18  # konstant for en kule fra Stokes' lov
+    C_s = 6 * np.pi  # stokes-koeffisienten av en kule
+    nu_s = mu_medium / rho_medium  # dynamsiske viskositet over tetthet til mediet
     g_hat = ((rho_kule / rho_medium) - 1) * gamma * g
 
     # returnerer mm / s
@@ -58,7 +58,7 @@ def terminal_video(frames, length, fps=60):
     for i in range(len(frames)):
         terminal[i] = length * (fps / frames[i])
         # print("Terminalhastighet fra video: %.5g [mm/s]" % terminal[i])
-    
+
     return terminal
 
 
@@ -91,26 +91,24 @@ def plot_analyse():
     plt.legend()
 
 
-rho_kuler = [21.1, 1042, 7905]                      # tetthet for (isopor, plast, stål) [kg / m^3]
-rho_medium = [1.225, 889, 998]                      # tetthet mediumer (luft, olje, vann) [kg / m^3]
-nu_medium = [15.2 * 1e-6, 214 * 1e-6, 1.0 * 1e-6]   # viskositet mediumer (luft, olje, vann) [10^-6 m^2 / s]
-mu_medium = [1.862 * 1e-5, 0.190, 0.998 * 1e-3]     # dynamisk viskositet (luft, olje, vann) [kg / ms]
+rho_kuler = [21.1, 1042, 7905]  # tetthet for (isopor, plast, stål) [kg / m^3]
+rho_medium = [1.225, 889, 998]  # tetthet mediumer (luft, olje, vann) [kg / m^3]
+nu_medium = [15.2 * 1e-6, 214 * 1e-6, 1.0 * 1e-6]  # viskositet mediumer (luft, olje, vann) [10^-6 m^2 / s]
+mu_medium = [1.862 * 1e-5, 0.190, 0.998 * 1e-3]  # dynamisk viskositet (luft, olje, vann) [kg / ms]
 
-d_array = np.linspace(0.0005, 0.15, 10000)                 # 1 mm til 200 mm [m]
-d_liten = np.array([1, 2, 3, 5, 8, 10]) / 1000             # diameter for små stålkuler i olje, 1 mm til 10 mm [m]
-d_stor = np.array([10, 15, 20, 27, 30, 38]) / 1000         # diameter for store stålkuler i olje, 10 til 38 mm [m]
-d_iso = np.array([25, 39, 45, 55, 95, 115]) / 1000         # diameter for isoporkulene i luft, 25 mm til 115 mm [m]
+d_array = np.linspace(0.0005, 0.15, 10000)  # 1 mm til 200 mm [m]
+d_liten = np.array([1, 2, 3, 5, 8, 10]) / 1000  # diameter for små stålkuler i olje, 1 mm til 10 mm [m]
+d_stor = np.array([10, 15, 20, 27, 30, 38]) / 1000  # diameter for store stålkuler i olje, 10 til 38 mm [m]
+d_iso = np.array([25, 39, 45, 55, 95, 115]) / 1000  # diameter for isoporkulene i luft, 25 mm til 115 mm [m]
 term_staal = terminal_stokes(rho_kuler[2], rho_medium[1], mu_medium[1], d_array)
 term_isopor = terminal_stokes(rho_kuler[0], rho_medium[0], mu_medium[0], d_array)
-
 
 # analytiske verdier for terminalhastighet
 teo_term_liten = terminal_stokes(rho_kuler[2], rho_medium[1], mu_medium[1], d_liten)
 teo_term_stor = terminal_stokes(rho_kuler[2], rho_medium[1], mu_medium[1], d_stor)
 teo_term_iso = terminal_stokes(rho_kuler[0], rho_medium[0], mu_medium[0], d_iso)
 print("Analytiske hastigheter for 1. liten oljetank, 2. stor oljetank, 3. isopor i luft:")
-print(teo_term_liten), print(teo_term_stor / 1000), print(teo_term_iso / 1000)      # mm/s, m/s, m/s
-
+print(teo_term_liten), print(teo_term_stor / 1000), print(teo_term_iso / 1000)  # mm/s, m/s, m/s
 
 # teoretisk plot av hastigheter for stokes' strømning
 plt.plot(d_array * 1e3, term_staal, color='#9c9c9c', label='Stål i olje (S)')
@@ -121,29 +119,27 @@ plot_analyse()
 
 # Data fra labben
 stor_tank = np.array([197, 192, 190])
-frames_67 = np.array([15, 9, 7, 7, 6, 5])         # bilder per sekund mellom 6 - 7 på stor tank
-frames_78 = np.array([14, 9, 7, 6, 5, 4])         # bilder per sekund mellom 7 - 8 på stor tank
-frames_89 = np.array([14, 9, 6, 6, 5, 4])         # bilder per sekund mellom 8 - 9 på stor tank
-frames_300 = np.array([73, 20, 10, 5, 3, 2.5])    # bilder per sekund mellom 300 - 250 ml på liten tank
-frames_250 = np.array([73, 19, 9, 5, 3, 2])       # bilder per sekund mellom 250 - 200 ml på liten tank
-frames_200 = np.array([71, 19, 9.5, 5, 3, 2])     # bilder per sekund mellom 200 - 150 ml på liten tank
-frames_iso = np.array([23, 21, 17, 16, 13, 6])    # bilder per sekund mellom toppen av stokken til bunnen av stokken
-
+frames_67 = np.array([15, 9, 7, 7, 6, 5])  # bilder per sekund mellom 6 - 7 på stor tank
+frames_78 = np.array([14, 9, 7, 6, 5, 4])  # bilder per sekund mellom 7 - 8 på stor tank
+frames_89 = np.array([14, 9, 6, 6, 5, 4])  # bilder per sekund mellom 8 - 9 på stor tank
+frames_300 = np.array([73, 20, 10, 5, 3, 2.5])  # bilder per sekund mellom 300 - 250 ml på liten tank
+frames_250 = np.array([73, 19, 9, 5, 3, 2])  # bilder per sekund mellom 250 - 200 ml på liten tank
+frames_200 = np.array([71, 19, 9.5, 5, 3, 2])  # bilder per sekund mellom 200 - 150 ml på liten tank
+frames_iso = np.array([23, 21, 17, 16, 13, 6])  # bilder per sekund mellom toppen av stokken til bunnen av stokken
 
 # Terminal hastigheter sett fra videoer
 v_67, v_78, v_89 = terminal_video(frames_67, stor_tank[0]), terminal_video(frames_78, stor_tank[1]), \
                    terminal_video(frames_89, stor_tank[2])
 print("Terminal hastigheter fra målinger på stor oljetank:")
-print(v_78)     # Terminal hastigheter fra målinger vi bruker videre (Hvorfor akkurat disse?)
+print(v_78)  # Terminal hastigheter fra målinger vi bruker videre (Hvorfor akkurat disse?)
 
 v_300, v_250, v_200 = terminal_video(frames_300, 76), terminal_video(frames_250, 76), terminal_video(frames_200, 76)
 print("Terminal hastigheter fra målinger på liten oljetank:")
-print(v_200)    # Terminal hastigheter fra målinger vi bruker videre (Hvorfor akkurat disse?)
+print(v_200)  # Terminal hastigheter fra målinger vi bruker videre (Hvorfor akkurat disse?)
 
-v_iso = terminal_video(frames_iso, 201)     # lengden på stokken som ble brukt til å måle er 201 [mm]
+v_iso = terminal_video(frames_iso, 201)  # lengden på stokken som ble brukt til å måle er 201 [mm]
 print("Terminal hastigheter fra målinger på isopor i luft")
-print(v_iso)    # Terminal hastigheter fra målinger vi bruker videre (Hvorfor akkurat disse?)
-
+print(v_iso)  # Terminal hastigheter fra målinger vi bruker videre (Hvorfor akkurat disse?)
 
 # Lineær regresjoner av dataene fra stål i olje og isopor i luft (begge akser gitt i mm)
 stig_liten, err_liten, konst_liten = linear_regression(d_liten[0:2] * 1e3, v_200[0:2], "stål i liten olje")
@@ -162,7 +158,6 @@ plt.plot(d_array * 1e3, y_iso, label='Lin.reg. isopor')
 plt.plot(d_array * 1e3, y2, label='Stokes')
 plt.plot(d_array * 1e3, y15, label='Rayleigh')
 
-
 # Hastighetsplott av alle målinger som ble gjort for alle kuler (for å velge ut beste målinger)
 # plot_sammenligning(d_stor, v_67, 'S: 6 - 7'), plot_sammenligning(d_stor, v_78, 'S: 7 - 8')
 # plot_sammenligning(d_stor, v_89, 'S: 8 - 9'), plot_sammenligning(d_liten, v_300, 'L: 300 - 250')
@@ -170,4 +165,8 @@ plt.plot(d_array * 1e3, y15, label='Rayleigh')
 plot_sammenligning(d_iso, v_iso, 'Isopor i luft'), plot_sammenligning(d_stor, v_78, 'S: 7 - 8')
 plot_sammenligning(d_liten, v_200, 'L: 200 - 150')
 plt.show()
+
+
+
+
 
