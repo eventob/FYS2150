@@ -46,6 +46,26 @@ def gamma_energi(i_arr, e_arr):
     return line.slope, line.intercept
 
 
+def linear_fwhm(spek, e_0, delta_e):
+    buff = 2
+    kanal = np.linspace(0, len(spek), len(spek))
+    fwhm_y = np.max(spektrum) / 2 + (abs(e_0) / delta_e)     # half maximum, fjernet bakgrunnsstråling
+    fwhm_x = kanal[np.logical_and(spek < fwhm_y + buff, spek > fwhm_y - buff)]
+    if len(fwhm_x) != buff:
+        raise Exception("No x-values within the defined buffer area!")
+    fwhm = (fwhm_x[1] - fwhm_x[0]) * delta_e
+    print("FWHM keV: %g" % fwhm)    # feil (243.3), feil (243), korrekt (264)
+
+    plt.plot(kanal, spektrum)
+    plt.axhline(fwhm_y, color='red', linestyle='--')
+    plt.axhline(np.max(spektrum), color='orange', linestyle='dotted')
+    plt.axvline(fwhm_x[1], 0, fwhm_y / np.max(spektrum), color='red', linestyle='--')
+    plt.axvline(fwhm_x[0], 0, fwhm_y / np.max(spektrum), color='red', linestyle='--')
+    plt.xlabel("Kanal"), plt.ylabel("Tellinger/kanal [n / kanal]")
+    plt.grid()
+    plt.show()
+
+
 # PRE-LAB OPPGAVER
 # spm 2, 3, 4
 print("Gjennomsnitt poisson: %g" % np.mean(poisson))     # korrekt
@@ -72,24 +92,4 @@ print("stig: %g, skjer: %g" % gamma_energi(i, e))   # feil (1.7, 2), korrekt (1.
 
 
 # spm 11
-def linear_fwhm(spek, e_0, delta_e):
-    buff = 2
-    kanal = np.linspace(0, len(spek), len(spek))
-    fwhm_y = np.max(spektrum) / 2 + (abs(e_0) / delta_e)     # half maximum, fjernet bakgrunnsstråling
-    fwhm_x = kanal[np.logical_and(spek < fwhm_y + buff, spek > fwhm_y - buff)]
-    if len(fwhm_x) != buff:
-        raise Exception("No x-values within the defined buffer area!")
-    fwhm = (fwhm_x[1] - fwhm_x[0]) * delta_e
-    print("FWHM keV: %g" % fwhm)    # feil (243.3), feil (243), korrekt (264)
-
-    plt.plot(kanal, spektrum)
-    plt.axhline(fwhm_y, color='red', linestyle='--')
-    plt.axhline(np.max(spektrum), color='orange', linestyle='dotted')
-    plt.axvline(fwhm_x[1], 0, fwhm_y / np.max(spektrum), color='red', linestyle='--')
-    plt.axvline(fwhm_x[0], 0, fwhm_y / np.max(spektrum), color='red', linestyle='--')
-    plt.xlabel("Kanal"), plt.ylabel("Tellinger/kanal [n / kanal]")
-    plt.grid()
-    plt.show()
-
-
 linear_fwhm(spektrum, -35, 2)
