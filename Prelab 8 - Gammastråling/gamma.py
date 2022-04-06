@@ -34,7 +34,7 @@ def lambert_lov(skj_arr, n_arr):
     plt.plot(skj_arr, y_line)
     plt.plot(skj_arr, n_arr)
     plt.grid()
-    plt.xlabel("Tykkelse [mm]"), plt.ylabel("Tellinger [$s^{-1}$]")
+    plt.xlabel("Tykkelse [m]"), plt.ylabel("Tellinger [$s^{-1}$]")
     plt.savefig("mu_tykkelse.png")
     plt.show()
     mu, delta_mu = abs(line.slope) / 10, line.stderr / 10
