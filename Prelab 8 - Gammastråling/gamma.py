@@ -27,14 +27,15 @@ def gm_eff(n_r, n_b, A, r, d):
 
 def lambert_lov(skj_arr, n_arr):
     """
-    (Ufullstendig) Funksjon som anslår svekkingskoeffisient og dens statistiske usikkerhet.
+    Funksjon som anslår svekkingskoeffisient og dens statistiske usikkerhet.
     """
     line = linregress(skj_arr, n_arr)
     y_line = (line.slope * skj_arr) + line.intercept
-    plt.plot(skj_arr, y_line)
-    plt.plot(skj_arr, n_arr)
+    plt.plot(skj_arr, y_line, label="Tilpasning")
+    plt.plot(skj_arr, n_arr, label="Data")
     plt.grid()
-    plt.xlabel("Tykkelse [m]"), plt.ylabel("Tellinger [$s^{-1}$]")
+    plt.xlabel("Tykkelse [m]"), plt.ylabel("Tellinger [$s^{-1}$]"), plt.title("Tellerate over tykkelse for GM-rør")
+    plt.legend()
     plt.savefig("mu_tykkelse.png")
     plt.show()
     mu, delta_mu = abs(line.slope) / 10, line.stderr / 10
@@ -68,22 +69,23 @@ def linear_fwhm(spek, e_0, delta_e):
     plt.grid()
     plt.show()
 
-
+"""
 # PRE-LAB OPPGAVER
 # spm 2, 3, 4
 print("Gjennomsnitt poisson: %g" % np.mean(poisson))     # korrekt
 std_dev(poisson)     # korrekt
 gm_eff(23, 2, 1e6, 0.02, 0.2)     # korrekt
-
-# spm 5, 6
+"""
+# spm 5, 6 / LABDAGEN
 skj_x = np.array([0, 5, 10, 15, 20, 25]) / 1e3           # [m]
 tell_n = 1000 / (np.array([32.89, 54.84, 94.52, 149.49, 272.60, 427.33])) - 0.248   # [s^-1]
+print(tell_n + 0.248)
 lambert_lov(skj_x, tell_n)  # feil (-275.9), feil (275.9), feil (0.276), feil (13.36), feil (13.35), feil (0.013)
 
-# spm 7
-z = abs(np.log(0.01) / 107.4) * 1e3
+# spm 7 / LABDAGEN
+z = abs(np.log(1 - 0.9) / 107.4) * 1e3
 print("Tykkelse z: %g" % z)     # korrekt
-
+"""
 # spm 8
 delta_z = (0.04 * z)
 print("delta_z: %g" % delta_z)      # feil (1 / 0.08), korrekt (0.04 * z)
@@ -96,34 +98,50 @@ print("stig: %g, skjer: %g" % gamma_energi(i, e))   # feil (1.7, 2), korrekt (1.
 
 # spm 11
 # linear_fwhm(spektrum, -35, 2)
+"""
+
 
 # LABDAGEN
-def data_behandling(data):
+def data_behandling(data, title, kanal):
     ch, mal = data[:, 0], data[:, 1]
-    data_max = ch[np.where(mal == np.max(mal))][0]
+    # data_max = ch[np.where(mal == np.max(mal))][0]
     # if len(data_max) < 1:
-    est_min = int(data_max - 50)
-    est_max = int(data_max + 50)
-    fit = np.polyfit(ch[est_min:est_max], mal[est_min:est_max], 50)
-    est = np.poly1d(fit)
-    fit_top = ch[np.where(est(ch[est_min:est_max]) == np.max(est(ch[est_min:est_max])))]
-    plt.plot(ch, mal)
-    plt.plot(ch[est_min:est_max], est(ch[est_min:est_max]))
+    # est_min = int(data_max - 50)
+    # est_max = int(data_max + 50)
+    # fit = np.polyfit(ch[est_min:est_max], mal[est_min:est_max], 50)
+    # est = np.poly1d(fit)
+    # fit_top = ch[np.where(est(ch[est_min:est_max]) == np.max(est(ch[est_min:est_max])))]
+    # plt.plot(ch[est_min:est_max], est(ch[est_min:est_max]))
     # plt.axvline((est_min + fit_top), color='red', linestyle='dotted')
+    plt.plot(ch, mal)
+    plt.xlabel("Kanaler"), plt.ylabel("Tellinger ($n_r$)"), plt.title(title)
+    for i in range(len(kanal)):
+        plt.axvline(kanal[i], linestyle='dotted', label=kanal[i], color='red')
     plt.grid()
+    plt.legend()
+    plt.savefig(title)
     plt.show()
 
 
 cs_137 = np.loadtxt("Cs137_spektrum.asc")
 co_60 = np.loadtxt("Co60_spektrum.asc")
-data_behandling(cs_137)
-data_behandling(co_60)
+armbandsur = np.loadtxt("armbåndsur_spekter.asc")
+
+data_behandling(cs_137, "Cesium spektrum fra Windas", [396])
+data_behandling(co_60, "Kobolt spektrum fra Windas", [694, 791])
+data_behandling(armbandsur, "Armbåndsur spektrum fra Windas", [47, 106, 149, 180, 214, 370, 663, 841])
 
 i_data = np.array([396, 791])
 e_data = np.array([662, 1332])
 
+print("Delta_E, E_0:")
 print(gamma_energi(i_data, e_data))
-print(694 * 1.6962025)
+stig, konst = gamma_energi(i_data, e_data)
+print("Målte verdier for energien til strålingen:")
+print((396 * stig) + konst, (694 * stig) + konst, (791 * stig) + konst)
 ra_topp = np.array([841, 663, 370, 214, 180, 149, 106, 47])
+print("Estimerte topper for klokken:")
 print(ra_topp * 1.6962025)
+print("Høyeste målte energinivå med antallet kanaler:")
 print(1024 * 1.6962)
+

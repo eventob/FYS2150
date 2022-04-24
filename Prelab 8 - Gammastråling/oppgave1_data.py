@@ -9,20 +9,23 @@ count = [4, 9, 3, 4, 5, 5, 2, 4, 4, 0, 2, 5, 2, 7, 4, 3, 6, 3, 0, 5, 0,
          4]
 
 counts, bins = np.histogram(count)
+print(len(count))
 
 #plt.xticks()
 mu = np.mean(count)
 x = np.arange(poisson.ppf(0.01, mu), poisson.ppf(0.99, mu))
-plt.plot(x, poisson.pmf(x, mu) * 1e2, 'r-', ms=8, label='poisson pmf')
+plt.plot(x, poisson.pmf(x, mu) * 1e2, 'r-', ms=8, label='Poisson tilnærming')
 
-plt.hist(bins[:-1], bins, weights=counts, align = "left")
+plt.hist(bins[:-1], bins, weights=counts, align = "left", label="Data")
 
 plt.grid(), plt.xlabel("Tellinger [$n_r$]"), plt.ylabel("Antall tellinger")
+plt.title("Fordeling av 103 målinger av tellinger")
+plt.legend()
 plt.savefig("histogram.png")
 
 plt.show()
 
-"""
+
 print(np.average(count), np.std(count))
 
 def std_dev(arr):
@@ -46,7 +49,7 @@ print("Values of the probabilities:")
 
 print(190*np.exp(-np.log(2)*19/30.2))
 
-count60 = [106, 115,101, 134]
+count60 = [106, 115, 101, 134]
 print("mean og 60s count", np.average(count60))
 std_dev(count60)
 count60_bak = [48, 31, 40, 31]
@@ -61,12 +64,13 @@ def gm_eff(n_r, n_b, A, r, d):
     
     omega = np.pi * r ** 2 / d ** 2
     gm = ((n_r - n_b) / (A * (omega / (4 * np.pi)))) * 1e2      # [%]
+    e = np.sqrt((0.001 / 0.162) ** 2 + (14.5 / 114) ** 2 + (8.2 / 37.5) ** 2) * gm
     print('GM_eff: %g' % gm)
+    print(e)
     
     
 gm_eff(114/60, 37.5/60, 122850, 0.011, 0.162)
 
-""" 
     
     
     
