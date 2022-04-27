@@ -11,14 +11,17 @@ diameter = np.loadtxt("diameter.dat")
 
 
 def lambda_min(u):
+    """
+    Minste bølgelengde til røntgenstråling ved hjelp av anodespenning.
+    """
     energy = u                              # elektron energien gjennom anoden [eV]
     minimum = h_c / energy / 1e-12          # bølgelengde [m]
     print("Minste bølgelengden med %.f V over anoden: %.f pm" % (u, minimum))     # [picometer]
 
 
-def vinkel_min(vinkel, fotoner):
+def min_vinkel_2v(vinkel, fotoner):
     """
-    Minste vinkel svarer til den maksimale energien i bremsestrålespekteret.
+    Minimumsvinkelen til røntgenstråling ved hjelp av LiF-krystall.
     Som vil si der intensiteten begynner å øke (se graf).
     """
     plt.plot(vinkel, fotoner)
@@ -26,7 +29,10 @@ def vinkel_min(vinkel, fotoner):
     # plt.show()
 
 
-def rontgen_spenning(angle):
+def rontgenror_spenning(angle):
+    """
+    Spenning over røntgenrøret ved bruk av en LiF-krystall og minste vinkelen (2 * v)
+    """
     to_d = 401e-12       # gitterkonstanten for LiF-krystall [m]
     lambda_min = to_d * np.sin(np.deg2rad(angle / 2))
     u = h_c / lambda_min
@@ -34,6 +40,9 @@ def rontgen_spenning(angle):
 
 
 def korreksjonsfaktor(u):
+    """
+    Funksjonen gir korreksjonsfaktoren for en gitt spenning U.
+    """
     if len(u) > 1:
         u_x = u[0]
         u_y = u[1]
@@ -48,6 +57,10 @@ def korreksjonsfaktor(u):
 
 
 def vinkel_data(arr):
+    """
+    Funksjon som regner ut phi, gitt en array med akselerasjonsspenninger og diameteren til
+    den ytre ringen (se laboppgave C2)
+    """
     n = len(arr)
 
     lambda_c = 2.426e-12
@@ -69,10 +82,10 @@ lambda_min(20000)
 # oppg 4 (korrekt)
 to_nu = np.linspace(12, 25, 14)      # grader [2 * nu]
 intensitet = np.array([130, 124, 133, 131, 128, 132, 138, 192, 244, 301, 348, 403, 462, 508])    # [fotoner per tid]
-vinkel_min(to_nu, intensitet)
+min_vinkel_2v(to_nu, intensitet)
 
 # oppg 5 (korrekt)
-rontgen_spenning(18)
+rontgenror_spenning(18)
 
 # oppg 7 (korrekt)
 korreksjonsfaktor(np.array([8000]))
