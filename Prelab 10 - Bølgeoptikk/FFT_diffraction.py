@@ -6,7 +6,7 @@ screen = np.zeros((n,n)) #genererer skjerm med 0 gjennomsiktighet
 middle = n//2
 n_slits = 10 #antall spalter
 slit_width = 5 #enkeltspalte bredde
-slit_dist = 2*slit_width #avstand mellom spalter
+slit_dist = 10*slit_width #avstand mellom spalter
 slit_length = 100 #må være partall
 
 #legg til to spalter i midten av skjermen
