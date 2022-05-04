@@ -3,16 +3,15 @@ import matplotlib.pyplot as plt
 
 # setter opp skjerm med spalter
 n = 1024
-screen = np.zeros((n, n))  # genererer skjerm med 0 gjennomsiktighet
+screen = np.zeros((n, n))       # genererer skjerm med 0 gjennomsiktighet
 middle = n // 2
-n_slits = 10  # antall spalter
-slit_width = 5  # enkeltspalte bredde
-slit_dist = 10 * slit_width  # avstand mellom spalter
-slit_length = 100  # må være partall
+n_slits = 10                    # antall spalter
+slit_width = 5                  # enkeltspalte bredde
+slit_dist = 10 * slit_width     # avstand mellom spalter
+slit_length = 100               # må være partall
+
 
 # legg til to spalter i midten av skjermen
-
-
 first_slit = middle - n_slits * (slit_dist + slit_width) // 2
 
 """
@@ -46,5 +45,6 @@ ax2.imshow(pattern, cmap="magma")
 plt.show()
 
 plt.plot(pattern[512, :])
+plt.axvline(411, color='red', linestyle='dotted'), plt.axvline(615, color='red', linestyle='dotted')
 plt.xlabel("Kanaler"), plt.ylabel("Intensitet")
 plt.show()

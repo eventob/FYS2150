@@ -44,3 +44,26 @@ diffrak_illuminans(np.linspace(-0.05, 0.05, 1000), 5, 0.00012)
 # oppg 10 (korrekt-ish)
 b_felt(0.0124, 0.0134, 0.0152)      # [mT]
 
+
+# LABDAGEN
+# DEL A
+def spalte_bredde(n, R, x):
+    lambda_i = 632.8e-9     # [m]
+    return n * lambda_i * R / x
+
+
+diffrak_illuminans()
+
+
+def teori_diameter(a, lambda_i, R):
+    omega_0 = 3.832, 7.016, 10.173, 13.324
+    r = np.pi * a * omega_0 / (lambda_i * R)
+    print(2 * r)
+
+
+# DEL B
+kvanta_lambda(1.097e-7, np.array([3, 4, 5, 6, 7]), 0.5)
+
+
+# DEL C
+
