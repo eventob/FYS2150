@@ -35,12 +35,12 @@ def b_felt(d_1, d_2, d_3):
     print(b * 1e3, delta)
 
 
-# oppg 2
+# oppg 2 (korrekt)
 kvanta_lambda(1.097e7, 6, 2)        # [nm]
 
-# oppg 5
+# oppg 5 (korrekt)
 diffrak_illuminans(np.linspace(-0.05, 0.05, 1000), 5, 0.00012)
 
-# oppg 10
-b_felt(0.0124, 0.0134, 0.0152)
+# oppg 10 (korrekt-ish)
+b_felt(0.0124, 0.0134, 0.0152)      # [mT]
 
