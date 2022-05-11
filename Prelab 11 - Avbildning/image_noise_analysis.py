@@ -53,5 +53,5 @@ def image_noise_analysis(filename):
     pass
 
 
-filename = ...
+filename = "40_.PNG"
 image_noise_analysis(filename)
