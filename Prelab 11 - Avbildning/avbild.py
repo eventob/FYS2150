@@ -20,11 +20,22 @@ def linseformel(s, s_mk):
     return 1 / f_over
 
 
+def delta_f(s, s_mk):
+    delta_d = 0.2
+    df_ds = s_mk ** 2 / (s_mk + s) ** 2
+    df_ds_mk = s ** 2 / (s_mk + s) ** 2
+    delta_f = np.sqrt((df_ds * delta_d) ** 2 + (df_ds_mk * delta_d) ** 2)
+    print(delta_f)
+
+
+delta_f(24.9, 115.1)
 print(linseformel(24.9, 115.1) * 1e1)       # [mm]
 print(linseformel(24.6, 115.4) * 1e1)       # [mm]
 print(r(12, 0.37))
 print(194.78 / (2 * (1.520 - 1)))
 print(0.01 * 194.78 / 0.37)
+
+
 
 
 # Eksp 5
